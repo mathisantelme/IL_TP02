@@ -1,7 +1,7 @@
-package Metrique;
+package metrique;
 
-public class somme {
-public int somme(int a,int b){
+public class Somme {
+public int getSomme(int a,int b){
 	return a+b;
 }
 }

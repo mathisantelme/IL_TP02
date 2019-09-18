@@ -1,4 +1,4 @@
-package Metrique;
+package metrique;
 /*****************************************************/
 import java.util.*;
 public class Arc implements Comparable {
@@ -54,38 +54,47 @@ public class Arc implements Comparable {
     }
     /** methode de comparaison necessaire pour implementer Comparable
 	Permet de rechercher un Arc dans un TreeSet **/
-    public int compareTo (Object O)  {  
-    	Arc A = (Arc) O ;  
-	if (this.from.id() == A.from().id() && this.to.id() == A.to().id())
-	    return 0;
-	if (this.from.id() < A.from().id() || 
-	    this.from.id() == A.from().id() && this.to.id() < A.to().id())
-	    return -1;    
-	return 1;
+    public int compareTo (Object obj)  {  
+    	Arc arc = (Arc) obj ;  
+		if (this.from.id() == arc.from().id() && this.to.id() == arc.to().id())
+		    return 0;
+		if (this.from.id() < arc.from().id() || 
+		    this.from.id() == arc.from().id() && this.to.id() < arc.to().id())
+		    return -1;    
+		return 1;
     }
+    
+    @Override
+    /** surcharge de la méthode equals */
+    public boolean equals (Object obj) {
+    	if (obj == null) return false;
+    	
+    	if (this.getClass() != obj.getClass()) return false;
+    	
+    	Arc arc = (Arc) obj ;
+    	try {
+    		return (this.from.id() == arc.from().id() && this.to.id() == arc.to().id());
+    	} catch (NullPointerException e) {
+    		return false;
+    	}
+    }
+    
+    @Override
+    /**
+     * surcharge de la méthode hasCode
+     * */
+    public int hashCode() {
+	    return super.hashCode();
+	}
+    
     // methode d'affichage
     public String toString () { 
 	return  this.from.id()+"->"+this.to.id();
     }
     /** methode d'affichage grammaire dot **/
     public String toDot () {
-	String arc = this.toString();
-	// gestion des attributs dot
-	String label = "";
-	if (this.label().length()!=0)
-	    label = "label="+this.label()+",";
-	String color="color="+this.color();
-	return arc+" ["+label+color+"]\n";	
-    }
-    
-    /** methode d'affichage grammaire dot **/
-    public String toDot2 () {
-	String arc = this.toString();
-	// gestion des attributs dot
-	String label = "";
-	if (this.label().length()!=0)
-	    label = "label="+this.label()+",";
-	String color="color="+this.color();
-	return arc+" ["+label+color+"]\n";	
+		String arc = this.toString();
+		// gestion des attributs dot
+		return arc+" ["+ ((this.label().length()!=0) ? "label="+this.label()+"," : "") + "color="+this.color() +"]\n";	
     }
 }// fin d'Arc

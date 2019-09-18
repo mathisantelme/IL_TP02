@@ -1,4 +1,4 @@
-package Metrique;
+package metrique;
 /*****************************************************/
 import java.util.*;
 /** Classe pour manipuler un noeud d'un graphe **/
@@ -13,7 +13,7 @@ public class Node implements Comparable {
     private String color;
     private String shape;
     /** permet de compter le nb d'appels à compareTo **/
-    public static int nbCompareTo = 0;
+    public static final int NBCOMPARETO = 0;
 
     /** constructeur **/
     Node (int i) {
@@ -38,11 +38,11 @@ public class Node implements Comparable {
 	return this.id;
     }
     /** accès à l'ensemble des successeurs **/
-    public TreeSet succ (){
+    public SortedSet succ (){
 	return this.succ;
     }
     /** accès à l'ensemble des predecesseurs **/
-    public TreeSet pred (){
+    public SortedSet pred (){
 	return this.pred;
     }
     /** méthodes d'accès à un attribut **/
@@ -70,41 +70,55 @@ public class Node implements Comparable {
 	this.label = l;
     }
     /** ajout d'un successeur **/
-    public boolean addSucc (Arc A ) {
-	return this.succ.add(A);
+    public boolean addSucc (Arc arc ) {
+	return this.succ.add(arc);
     }
     /** test de l'existence d'un successeur **/
-    public boolean containsSucc (Arc A) { 
-	return this.succ.contains(A);
+    public boolean containsSucc (Arc arc) { 
+	return this.succ.contains(arc);
     }
     /** suppression d'un successeur **/
-    public boolean removeSucc (Arc A) {
-	return this.succ.remove(A);
+    public boolean removeSucc (Arc arc) {
+	return this.succ.remove(arc);
     }
     /** ajout d'un predecesseur **/
-    public boolean addPred (Arc A ) {
-	return this.pred.add(A);
+    public boolean addPred (Arc arc ) {
+	return this.pred.add(arc);
     }
     /** test de l'existence d'un predecesseur **/
-    public boolean containsPred (Arc A) { 
-	return this.pred.contains(A);
+    public boolean containsPred (Arc arc) { 
+	return this.pred.contains(arc);
     }
     /** suppression d'un predecesseur **/
-    public boolean removePred (Arc A) {
-	return this.pred.remove(A);
+    public boolean removePred (Arc arc) {
+	return this.pred.remove(arc);
     }
 
     /** methode de comparaison necessaire pour implementer Comparable
 	permet de rechercher un Node dans un TreeSet **/
-    public int compareTo (Object O)  {  
-	// nbCompareTo++;
-    	Node N = (Node) O ; // C'est Node qui est entre
-	if (this.id > N.id())
-	    return 1;
-	if (this.id < N.id())
-	    return -1;
-	return 0;    
+    public int compareTo (Object obj)  {  
+
+    	Node node = (Node) obj ; // C'est Node qui est entre
+		if (this.id > node.id())
+		    return 1;
+		if (this.id < node.id())
+		    return -1;
+		return 0;    
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj == null) return false;
+    	if (this.getClass() != obj.getClass()) return false;
+    	Node node= (Node) obj;
+    	return this.id() == node.id();
+    }
+    
+    @Override
+    public int hashCode() {
+    	return super.hashCode();
+    }
+    
     /** methode d'affichage **/
     public String toString () { 
 	return  this.id+" ";
@@ -112,9 +126,6 @@ public class Node implements Comparable {
     /** methode d'affichage grammaire dot  **/ 
     public String toDot () { 
 	return  this.id+" [label="+this.label+",color="+this.color+",shape="+this.shape+"]\n";
-    }
-    
-    public void toDot2(){
     }
     
 }// fin de Node

@@ -1,4 +1,4 @@
-package Metrique;
+package metrique;
 /*****************************************************/
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.io.*;
  **/
 class Graphe {
 	/** ensemble de Node (ou NodeSet) **/
-	public TreeSet S;
+	public TreeSet treeSet;
 
 	/** constructeur **/
 	Graphe() {
@@ -23,28 +23,28 @@ class Graphe {
 	}
 
 	/** ajout d'un Node dans le graphe **/
-	public boolean addNode(Node N) {
-		return this.S.add(N);
+	public boolean addNode(Node node) {
+		return this.treeSet.add(node);
 	}
 
 	/** test de l'existence d'un Node dans le graphe **/
 	public boolean containsNode(int i) {
-		return this.S.contains(new Node(i));
+		return this.treeSet.contains(new Node(i));
 	}
 
 	/** suppression d'un Node dans le graphe **/
-	public boolean removeNode(Node N) {
-		if (!this.S.remove(N))
+	public boolean removeNode(Node node) {
+		if (!this.treeSet.remove(node))
 			return false;
-		for (Iterator I = N.succ().iterator(); I.hasNext();) {
-			Arc A = (Arc) I.next();
-			Node N2 = A.to();
-			N2.removePred(A);
+		for (Iterator I = node.succ().iterator(); I.hasNext();) {
+			Arc arc = (Arc) I.next();
+			Node node2 = arc.to();
+			node2.removePred(arc);
 		}
-		for (Iterator I = N.pred().iterator(); I.hasNext();) {
-			Arc A = (Arc) I.next();
-			Node N2 = A.from();
-			N2.removeSucc(A);
+		for (Iterator I = node.pred().iterator(); I.hasNext();) {
+			Arc arc = (Arc) I.next();
+			Node node2 = arc.from();
+			node2.removeSucc(arc);
 		}
 		return true;
 	}
@@ -52,10 +52,10 @@ class Graphe {
 	/** accès à un Node du graphe **/
 	public Node getNode(int i) {
 		if (this.containsNode(i))
-			for (Iterator I = this.S.iterator(); I.hasNext();) {
-				Node N = (Node) I.next();
-				if (N.id() == i)
-					return N;
+			for (Iterator I = this.treeSet.iterator(); I.hasNext();) {
+				Node node = (Node) I.next();
+				if (node.id() == i)
+					return node;
 			}
 		return null;
 	}
@@ -75,33 +75,33 @@ class Graphe {
 		if (this.containsArc(i, j)) {
 			Node from = this.getNode(i);
 			for (Iterator I = from.succ().iterator(); I.hasNext();) {
-				Arc A = (Arc) I.next();
-				if (A.from().id() == i && A.to().id() == j)
-					return A;
+				Arc arc = (Arc) I.next();
+				if (arc.from().id() == i && arc.to().id() == j)
+					return arc;
 			}
 		}
 		return null;
 	}
 
 	/** ajout d'un Arc dans le graphe **/
-	public boolean addArc(Arc A) {
-		int i = A.from().id();
-		int j = A.to().id();
+	public boolean addArc(Arc arc) {
+		int i = arc.from().id();
+		int j = arc.to().id();
 		if (this.containsNode(i) && this.containsNode(j) && !this.containsArc(i, j)) {
-			A.from().addSucc(A);
-			A.to().addPred(A);
+			arc.from().addSucc(arc);
+			arc.to().addPred(arc);
 			return true;
 		}
 		return false;
 	}
 
 	/** suppression d'un Arc dans le graphe **/
-	public boolean removeArc(Arc A) {
-		int i = A.from().id();
-		int j = A.to().id();
+	public boolean removeArc(Arc arc) {
+		int i = arc.from().id();
+		int j = arc.to().id();
 		if (this.containsNode(i) && this.containsNode(j) && this.containsArc(i, j)) {
-			A.from().removeSucc(A);
-			A.to().removePred(A);
+			arc.from().removeSucc(arc);
+			arc.to().removePred(arc);
 			return true;
 		}
 		return false;
@@ -332,7 +332,7 @@ class Graphe {
 		// ensemble S de Node
 		int i = nb;
 		while (i > 0) {
-			int id = (int) Math.rint(10 * nb * Math.random());
+			int id = (int) Math.rint(10 * nb * java.util.Random.nextInt());
 			if (G.addNode(new Node(id, "n" + id))==true)
 				i--;
 		}
@@ -342,14 +342,12 @@ class Graphe {
 			for (Iterator J = G.getS().iterator(); J.hasNext();) {
 				Node N2 = (Node) J.next();
 				if (N2.id() > N1.id()) {
-					int choice = (int) Math.rint(10 * Math.random());
+					int choice = (int) Math.rint(10 * java.util.Random.nextInt());
 					if (choice > 5){
 						Arc A = new Arc(N1, N2);
 						int il = A.from().id();
 						int jl = A.to().id();
-						if (G.containsNode(il))
-							if (G.containsNode(jl))
-								if( !G.containsArc(il, jl)) {
+						if (G.containsNode(il) && G.containsNode(jl) && !G.containsArc(il, jl)) {
 									A.from().addSucc(A);
 									A.to().addPred(A);
 								}
